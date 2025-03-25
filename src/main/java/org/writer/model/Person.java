@@ -1,5 +1,6 @@
 package org.writer.model;
 
+import com.opencsv.bean.CsvBindByPosition;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +10,15 @@ import org.writer.Annotations.CsvField;
 @Builder
 @AllArgsConstructor
 public class Person {
-    @CsvField
+    @CsvField(name = "firstName")
     private String firstName;
-    @CsvField
+    @CsvField(name = "lastName")
     private String lastName;
-    @CsvField
+    @CsvField(name = "dayOfBirth")
     private int dayOfBirth;
-    @CsvField
+    @CsvField(name = "monthOfBirth")
     private Months monthOfBirth;
-    @CsvField
+    @CsvField(name = "yearOfBirth")
     private int yearOfBirth;
 
 }

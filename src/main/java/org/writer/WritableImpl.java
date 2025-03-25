@@ -21,19 +21,32 @@ public class WritableImpl implements Writable{
      */
     @Override
     public void writeToFile(List<?> data, String fileName) throws IOException{
-        if (data == null || data.isEmpty()) {
-            throw new IllegalArgumentException("Data list cannot be null or empty");
+        if (data == null || data.isEmpty() || fileName == null) {
+            throw new IllegalArgumentException("Data list cannot be null or empty, or filename empty");
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
+
+            // Запись заголовков
+            Field[] fields = data.get(0).getClass().getDeclaredFields();
+            StringBuilder header = new StringBuilder();
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(CsvField.class)) {
+                    CsvField annotation = field.getAnnotation(CsvField.class);
+                    header.append(annotation.name()).append(";");
+                }
+            }
+            writer.write(header.substring(0, header.length() - 1)); // Убираем последнюю запятую
+            writer.newLine();
+
             for (Object item : data) {
-                Field[] fields = item.getClass().getDeclaredFields();
+                fields = item.getClass().getDeclaredFields();
                 StringBuilder line = new StringBuilder();
                 for (Field field : fields) {
                     if (field.isAnnotationPresent(CsvField.class)) {
                         field.setAccessible(true);
                         try {
-                            line.append(field.get(item)).append(",");
+                            line.append(field.get(item)).append(";");
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -42,5 +55,6 @@ public class WritableImpl implements Writable{
                 writer.write(line + "\n");
             }
         }
+
     }
 }

@@ -11,8 +11,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 public class Student {
-    @CsvField
+    @CsvField(name = "name")
     private String name;
-    @CsvField
+    @CsvField(name = "score")
     private List<String> score;
 }
