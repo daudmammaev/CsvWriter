@@ -6,6 +6,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 /**
  * Класс для записи объектов в CSV файл.
@@ -21,8 +24,11 @@ public class WritableImpl implements Writable{
      */
     @Override
     public void writeToFile(List<?> data, String fileName) throws IOException{
-        if (data == null || data.isEmpty() || fileName == null) {
-            throw new IllegalArgumentException("Data list cannot be null or empty, or filename empty");
+        if  (data == null || data.isEmpty() ) {
+            throw new IllegalArgumentException("Data list cannot be null or empty");
+        }
+        if (fileName == null) {
+            throw new IllegalArgumentException("filename is null");
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
@@ -36,9 +42,12 @@ public class WritableImpl implements Writable{
                     header.append(annotation.name()).append(";");
                 }
             }
-            writer.write(header.substring(0, header.length() - 1)); // Убираем последнюю запятую
-            writer.newLine();
 
+            if (header.length() > 0) {
+                writer.write(header.substring(0, header.length() - 1));
+            }
+
+            writer.newLine();
             for (Object item : data) {
                 fields = item.getClass().getDeclaredFields();
                 StringBuilder line = new StringBuilder();
@@ -46,7 +55,7 @@ public class WritableImpl implements Writable{
                     if (field.isAnnotationPresent(CsvField.class)) {
                         field.setAccessible(true);
                         try {
-                            line.append(field.get(item)).append(";");
+                            line.append(field.get(item) == null ? ";" : field.get(item) + ";");
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }

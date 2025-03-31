@@ -1,32 +1,25 @@
 package org.writer;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Value;
+
 import net.datafaker.Faker;
-import org.writer.Annotations.CsvField;
 import org.writer.model.Months;
 import org.writer.model.Person;
 import org.writer.model.Student;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
 
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException {
+    public static void main(String[] args) {
         Faker faker = new Faker();
         List<Person> personList = new ArrayList<>();
         List<Student> studentsList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             personList.add(new Person(faker.name().firstName(),
-                    faker.name().lastName(),
+                    null,
                     i + 1,
                     Months.APRIL,
                     i + 1));
