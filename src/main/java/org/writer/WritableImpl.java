@@ -28,7 +28,7 @@ public class WritableImpl implements Writable{
             throw new IllegalArgumentException("Data list cannot be null or empty");
         }
         if (fileName == null) {
-            throw new NullPointerException("filename is null");
+            throw new IllegalArgumentException("filename is null");
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
